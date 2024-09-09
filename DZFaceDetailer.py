@@ -3,13 +3,14 @@ from mediapipe import solutions
 import cv2
 import numpy as np
 from PIL import Image, ImageFilter
-from ultralytics import YOLO
 import os
 import comfy
 import nodes
-from folder_paths import base_path
+from folder_paths import models_dir, cache_dir
 
-face_model_path = os.path.join(base_path, "models/dz_facedetailer/yolo/face_yolov8n.pt")
+face_model_path = os.path.join(models_dir, "dz_facedetailer/yolo/face_yolov8n.pt")
+if not os.path.exists(face_model_path) and os.path.exists(os.path.join(cache_dir, "yolo/face_yolov8n.pt")):
+    face_model_path = os.path.join(cache_dir, "yolo/face_yolov8n.pt")
 MASK_CONTROL = ["dilate", "erode", "disabled"]
 MASK_TYPE = ["face", "box"]
 
@@ -123,6 +124,7 @@ def facebox_mask(image):
     mask = np.zeros((image.shape[0], image.shape[1], 4), dtype=np.uint8)
 
     # setup yolov8n face detection model
+    from ultralytics import YOLO
     face_model = YOLO(face_model_path)
     face_bbox = face_model(image)
     boxes = face_bbox[0].boxes
@@ -166,6 +168,7 @@ def facemesh_mask(image):
         (image.shape[0], image.shape[1], 4), dtype=np.uint8)
     
     # setup yolov8n face detection model
+    from ultralytics import YOLO
     face_model = YOLO(face_model_path)
     face_bbox = face_model(image)
     boxes = face_bbox[0].boxes
