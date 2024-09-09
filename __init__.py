@@ -20,10 +20,8 @@ save_loc = os.path.join(models_dir, "dz_facedetailer", "yolo")
 if not os.path.exists(save_loc):
     print('FaceDetailer: Creating models directory')
     os.makedirs(save_loc, exist_ok=True)
-    download_model()
 else:
     print('FaceDetailer: Model directory already exists')
-    download_model()
 
 from .DZFaceDetailer import FaceDetailer
 
